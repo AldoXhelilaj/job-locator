@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Map, { Marker, Popup, GeolocateControl, FullscreenControl, NavigationControl, ScaleControl } from 'react-map-gl';
 import { setSelectedCityJobs, toggleRemoteOnly, fetchJobs, setSelectedCitySearch } from '../slices/jobSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,8 +6,10 @@ import cities from '../utils/de.json';
 import CustomCheckbox from './CustomCheckbox';
 import useNetworkStatus from '../hooks/useNetworkStatus';
 import { setError, clearError } from '../slices/errorSlice';
+import { selectJobs, selectJobsError, selectJobsStatus } from '../slices/jobSlice';
+import ErrorMessage from './ErrorMessage';
 
-const JobMap = () => {
+const JobMap = React.memo(() => {
     const [viewport, setViewport] = useState({
         latitude: 51.1657,
         longitude: 10.4515,
@@ -26,41 +28,64 @@ const JobMap = () => {
     const remoteOnly = useSelector((state) => state.jobs.remoteOnly);
     const jobs = useSelector((state) => state.jobs.allJobs);
 
+    // const jobs = useSelector(selectJobs);
+    const status = useSelector(selectJobsStatus);
+    const error = useSelector(selectJobsError);
+
     // Fetch job data from API
     useEffect(() => {
         if (isOnline) {
-          dispatch(fetchJobs(import.meta.env.VITE_API_URL)).catch(() => {
-            dispatch(setError('Unable to fetch job listings. Please try again later.'));
-          });
+            dispatch(fetchJobs(import.meta.env.VITE_API_URL)).catch(() => {
+                dispatch(setError('Unable to fetch job listings. Please try again later.'));
+
+
+            });
         } else {
-          dispatch(setError('You are currently offline. Please check your internet connection.'));
+            dispatch(setError('You are currently offline. Please check your internet connection.'));
         }
         return () => {
-          dispatch(clearError());
+            dispatch(clearError());
         }
-      }, [dispatch, isOnline]);
+    }, [dispatch, isOnline]);
 
     // Function to filter jobs by city
-    const filterJobs = (city) => {
+    const filterJobs = useCallback((city) => {
         const filteredJobs = jobs.filter(job =>
             job.location === city.name && (!remoteOnly || job.remote)
         );
         dispatch(setSelectedCityJobs(filteredJobs));
         dispatch(setSelectedCitySearch(city.name));
-    };
+    }, []);
+
+
+    const filteredJobs = useMemo(() => {
+        return jobs.filter(job => job.location === selectedCitySearch && (!remoteOnly || job.remote));
+    }, [jobs, selectedCitySearch, remoteOnly]);
 
     useEffect(() => {
         if (selectedCitySearch) {
-            const filteredJobs = jobs.filter(job =>
-                job.location === selectedCitySearch && (!remoteOnly || job.remote)
-            );
+
             dispatch(setSelectedCityJobs(filteredJobs));
         }
 
-    }, [selectedCitySearch, jobs, remoteOnly, dispatch]);
+
+    }, [selectedCitySearch, jobs, remoteOnly, dispatch, status]);
+
+    const jobCounts = useMemo(() => {
+        return cities.reduce((accumulator, city) => {
+            const count = jobs.filter(job =>
+                job.location === city.name && (!remoteOnly || job.remote)
+            ).length;
+            accumulator[city.name] = count;
+            return accumulator;
+        }, {});
+    }, [remoteOnly, jobs, cities]);
+    if (status === 'loading') {
+        return <div>Loading...</div>;
+    }
+
 
     return (
-
         <div className='map'>
             <CustomCheckbox
                 checked={remoteOnly}
@@ -79,14 +104,16 @@ const JobMap = () => {
                 <NavigationControl position="top-left" />
                 <ScaleControl />
                 {/* Render markers for each city with available jobs */}
+
                 {cities.map(city => {
-                    const jobCount = jobs.filter(job => job.location === city.name).length;
+                    const jobCount = jobCounts[city.name] || 0;
                     if (jobCount === 0) return null
                     return (
                         <Marker key={city.coords.lat} longitude={city.coords.lon} latitude={city.coords.lat}>
-                            <div onClick={() => filterJobs(city)} style={{ 
+                            <div onClick={() => filterJobs(city)} style={{
                                 backgroundColor: selectedCitySearch === city.name ? '#6a0dad' : '#75677f',
-                                 borderRadius: '50%', padding: '5px', color: 'white', cursor: 'pointer', width: '25px', height: '25px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                borderRadius: '50%', padding: '5px', color: 'white', cursor: 'pointer', width: '25px', height: '25px', display: 'flex', justifyContent: 'center', alignItems: 'center'
+                            }}>
                                 {jobCount}
                             </div>
                         </Marker>
@@ -95,6 +122,6 @@ const JobMap = () => {
             </Map>
         </div>
     );
-};
+});
 
 export default JobMap;

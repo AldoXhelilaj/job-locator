@@ -1,3 +1,4 @@
+import React from 'react';
 import { useSelector } from 'react-redux';
 import './JobResults.css';
 import ErrorMessage from './ErrorMessage';
@@ -14,27 +15,26 @@ const JobResults = () => {
     : selectedCityJobs;
 
   return (
-
     <div className="job-results">
       {errorMessage ? (
         <h2><ErrorMessage message={errorMessage} /></h2>
       ) : (
         selectedCity ? (
-            filteredJobs.length > 0 ? (
-              filteredJobs.map(job => (
-                <div className="job-card" key={job.slug} onClick={() => window.open(job.url, '_blank')}>
-                  <h3>{job.title}</h3>
-                  <p>{job.company_name}</p>
-                  <p>Remote: {job.remote ? 'Yes' : 'No'}</p>
-                  <p>Location: {job.location}</p>
-                </div>
-              ))
-            ) : (
-              <h2>No jobs available for {selectedCity}.</h2>
-            )
+          filteredJobs.length > 0 ? (
+            filteredJobs.map(job => (
+              <div className="job-card" key={job.slug} onClick={() => window.open(job.url, '_blank')}>
+                <h3>{job.title}</h3>
+                <p>{job.company_name}</p>
+                <p>Remote: {job.remote ? 'Yes' : 'No'}</p>
+                <p>Location: {job.location}</p>
+              </div>
+            ))
           ) : (
-            <h2>Please select a city</h2>
+            <h2>No jobs available for {selectedCity}.</h2>
           )
+        ) : (
+          <h2>Please select a city</h2>
+        )
       )}
     </div>
   );

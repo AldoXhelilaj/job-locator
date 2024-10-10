@@ -51,7 +51,7 @@ const CitySearch = () => {
             {filteredCities.length > 0 && (
                 <ul className="city-search-results">
                     {filteredCities.map((city) => (
-                        <li key={city.nam} onClick={() => handleCitySelect(city)}>
+                        <li key={city.name + city.state} onClick={() => handleCitySelect(city)}>
                             {city.name}
                         </li>
                     ))}
