@@ -38,5 +38,27 @@ To run this application, you will need to create a `.env` file in the root direc
 
 VITE_API_URL=https://www.arbeitnow.com/api/job-board-api
 VITE_ACCESS_TOKEN=(its in the email, for security reasons i cant put it here)
+VITE_FIREBASE_API
 
-Run npm install and npm run dev to run it Localy
+## Docker Installation
+To run this application using Docker, follow these steps:
+Install Docker:
+Ensure Docker is installed on your machine. You can download it from the official Docker website.
+Navigate to Project Directory:
+Open your terminal and navigate to the directory where you downloaded the project:
+bash
+cd path/to/your/project
+
+Build the Docker Image:
+Run the following command to build the Docker image using the provided Dockerfile:
+bash
+docker build -t job-listings-app .
+
+Run the Docker Container:
+After building the image, you can run it with:
+bash
+docker run -d --rm -p 5173:5173 --name job-listings-container job-listings-app
+
+Access Your Application:
+Open a web browser and navigate to http://localhost:5173 to access your application.
+By following these instructions, you can set up and run the Job Listings Application either locally or using Docker.
