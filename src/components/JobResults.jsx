@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import './JobResults.css';
 import ErrorMessage from './ErrorMessage';
+import { Link } from 'react-router-dom';
 
 const JobResults = () => {
   const selectedCityJobs = useSelector((state) => state.jobs.selectedCityJobs);
@@ -22,12 +23,14 @@ const JobResults = () => {
         selectedCity ? (
           filteredJobs.length > 0 ? (
             filteredJobs.map(job => (
-              <div className="job-card" key={job.slug} onClick={() => window.open(job.url, '_blank')}>
+              <Link to={`${job.slug}`} key={job.slug}>
+              <div className="job-card" key={job.slug}>
                 <h3>{job.title}</h3>
                 <p>{job.company_name}</p>
                 <p>Remote: {job.remote ? 'Yes' : 'No'}</p>
                 <p>Location: {job.location}</p>
               </div>
+              </Link>
             ))
           ) : (
             <h2>No jobs available for {selectedCity}.</h2>

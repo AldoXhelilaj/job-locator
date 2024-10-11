@@ -11,6 +11,7 @@ import SignUp from './components/SignUp';
 import HomePage from './components/Homepage';
 import Navigation from './components/Navigation';
 import PrivateRoute from './components/PrivateRoute';
+import SingleJob from './components/SingleJob';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Routes>
         <Route element={<PrivateRoute />}>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/:slug" element={<SingleJob />} />
                 </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />

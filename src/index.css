@@ -97,7 +97,7 @@ button:focus-visible {
 }
 
 .form {
- min-width: 30%;
+  min-width: 30%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -109,6 +109,7 @@ button:focus-visible {
   border-radius: 8px;
   background-color: #2c2c2c;
 }
+
 label {
   color: #E0E0E0;
   width: 100%;
@@ -116,7 +117,75 @@ label {
 }
 
 .home-page {
-width: 100%;
+  width: 100%;
 }
 
+.job-detail {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
 
+.job-detail h1 {
+  color: #6a0dad;
+
+}
+
+.job-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.job-header h1 {
+  color: #6a0dad;
+  font-size: 2.5rem;
+}
+
+.job-header h3 {
+  color: #333333;
+  font-size: 1.5rem;
+}
+
+.location {
+  color: #666666;
+}
+
+.description h2 {
+  color: #6a0dad;
+  margin-top: 20px;
+}
+
+.description p {
+  line-height: 1.6;
+  color: #333333;
+}
+
+.description ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #333333;
+
+}
+
+.description ul li {
+  margin-bottom: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .job-detail {
+    padding: 15px;
+    margin: 20px;
+  }
+
+  .job-header h1 {
+    font-size: 2rem;
+  }
+
+  .job-header h3 {
+    font-size: 1.25rem;
+  }
+}
