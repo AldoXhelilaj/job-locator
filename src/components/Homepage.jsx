@@ -1,6 +1,11 @@
 import CitySearch from "./CitySearch";
 import JobMap from "./JobMap";
 import JobResults from "./JobResults";
+import withErrorBoundary from "../hoc/withErrorBoundary";
+import CrashableComponent from './CrashableComponent'
+
+const EnhancedComponent =  withErrorBoundary(JobMap)
+
 
 
 const HomePage = () => {
@@ -8,7 +13,8 @@ const HomePage = () => {
         <div className="home-page">
             <CitySearch />
             <div className='map-grid'>
-                <JobMap />
+                <EnhancedComponent/>
+                {/* <JobMap /> */}
                 <JobResults />
             </div>
         </div>

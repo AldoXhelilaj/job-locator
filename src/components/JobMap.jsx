@@ -9,7 +9,7 @@ import { setError, clearError } from '../slices/errorSlice';
 import { selectJobs, selectJobsError, selectJobsStatus } from '../slices/jobSlice';
 import ErrorMessage from './ErrorMessage';
 
-const JobMap = React.memo(() => {
+const JobMap = React.memo(({onError}) => {
     const [viewport, setViewport] = useState({
         latitude: 51.1657,
         longitude: 10.4515,
@@ -38,7 +38,8 @@ const JobMap = React.memo(() => {
             dispatch(fetchJobs(import.meta.env.VITE_API_URL)).catch(() => {
                 dispatch(setError('Unable to fetch job listings. Please try again later.'));
 
-
+                // onError( new Error('TEST')) calls the 
+                
             });
         } else {
             dispatch(setError('You are currently offline. Please check your internet connection.'));
